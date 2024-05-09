@@ -2,7 +2,9 @@ const express = require("express")
 
 const app = express()
 
-const data = [
+
+
+let data = [
   { 
     "id": 1,
     "name": "Arto Hellas", 
@@ -25,11 +27,7 @@ const data = [
   }
 ]
 
-app.get("/api/persons", (req, res)=>{
-
-
-    res.json(data)
-})
+app.use(express.json())
 
 app.get("/info", (req, res)=>{
   const persons = data.length;
@@ -40,6 +38,53 @@ console.log("🚀 ~ app.get ~ date:", date)
 const currentDate = `<p>${date}</p>`
   res.send(`${content} ${currentDate}`)
 })
+
+app.get("/api/persons", (req, res)=>{
+
+
+    res.json(data)
+})
+
+app.post("/api/persons", (req, res)=>{
+  const {name, number} = req.body
+  if(!name) return res.status(422).send("name is required")
+  if(!number) return res.status(422).send("number is required")
+  const nameExist = data.find(person=>person.name === name)
+if(nameExist) return res.status(422).send("name must be unique")
+  const id = Number.parseInt(Math.random()*Number.MAX_SAFE_INTEGER, 10);
+  const newPerson = {
+    id, name, number
+  }
+  data.push(newPerson)
+  res.status(201).send(newPerson)
+
+})
+
+app.get("/api/persons/:id", (req, res)=>{
+  const id = Number.parseInt(req.params.id, 10);
+  console.log("🚀 ~ app.get ~ id:", typeof id)
+
+  const person = data.find(person => {
+    console.log("🚀 ~ app.get ~ person:", person)
+    return person.id === id
+  })
+  
+  if(person){
+    res.json(person)
+    return
+  }
+  res.status(404).send(`Person with id ${id} not found`)
+})
+
+app.delete("/api/persons/:id", (req, res)=>{
+  const id = Number.parseInt(req.params.id, 10)
+  const person = data.find(person=>person.id === id)
+  if(!person) return res.status(404).send(`Person with id ${id} not found`)
+    data = data.filter(person=> person.id!==id)
+  res.status(200).send(person)
+})
+
+
 
 const port = 3001;
 
