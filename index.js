@@ -3,6 +3,7 @@ const morgan = require("morgan")
 const app = express()
 const cors = require("cors")
 
+require("dotenv").config()
 
 let data = [
   { 
@@ -108,10 +109,8 @@ app.delete("/api/persons/:id", (req, res)=>{
 })
 
 
+const Port = process.env.PORT || 3001;
 
-const port = 3001;
-
-
-app.listen(port, ()=>{
-    console.log(`App is listening on port ${port}`)
+app.listen(Port, ()=>{
+    console.log(`App is listening on port ${Port}`)
 })
