@@ -1,7 +1,7 @@
 const express = require("express")
 const morgan = require("morgan")
 const app = express()
-
+const cors = require("cors")
 
 
 let data = [
@@ -27,6 +27,7 @@ let data = [
   }
 ]
 
+app.use(cors())
 
 app.use(express.json())
 
@@ -56,6 +57,9 @@ app.get("/api/persons", (req, res)=>{
 
 app.post("/api/persons", (req, res)=>{
   const {name, number} = req.body
+  console.log("🚀 ~ app.post ~ number:", number)
+  console.log("🚀 ~ app.post ~ name:", name)
+  
   if(!name) return res.status(422).send("name is required")
   if(!number) return res.status(422).send("number is required")
   const nameExist = data.find(person=>person.name === name)
@@ -65,7 +69,7 @@ if(nameExist) return res.status(422).send("name must be unique")
     id, name, number
   }
   data.push(newPerson)
-  res.status(201).send(newPerson)
+  res.status(201).json(newPerson)
 
 })
 
@@ -74,7 +78,6 @@ app.get("/api/persons/:id", (req, res)=>{
   console.log("🚀 ~ app.get ~ id:", typeof id)
 
   const person = data.find(person => {
-    console.log("🚀 ~ app.get ~ person:", person)
     return person.id === id
   })
   
@@ -83,6 +86,17 @@ app.get("/api/persons/:id", (req, res)=>{
     return
   }
   res.status(404).send(`Person with id ${id} not found`)
+})
+
+app.put("/api/persons/:id", (req, res)=>{
+  const personId = Number.parseInt(req.params.id, 10)
+  const {id, name, number} = req.body;
+  const newPerson = {id, name, number}
+const person = data.find(person=>person.id === personId)
+if(!person) return res.status(404).send(`Person with id ${personId} has already been deleted`)
+  data = data.map(person=>person.id ===personId ? newPerson: person)
+res.json(newPerson)
+
 })
 
 app.delete("/api/persons/:id", (req, res)=>{
