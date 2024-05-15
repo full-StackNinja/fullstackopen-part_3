@@ -7,7 +7,7 @@
   },
   "scripts": {
     "start": "node ./index.js",
-    "dev": "nodemon ./index.js",
+    "dev": "nodemon  ./index.js",
     "deploy:ui": "rm -rf dist && cd ../fullstackopen-part_0_1_2/part2/phonebook && npm run build && cp -r dist ../../../fullstackopen-part_3/",
     "publish:full": "npm run deploy:ui && git add . && git commit -m uibuild && git push origin main"
   },
