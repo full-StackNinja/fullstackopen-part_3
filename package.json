@@ -1,25 +1,32 @@
 {
-  "name": "fullstackopen-part_3",
-  "version": "1.0.0",
-  "main": "index.js",
-  "engines": {
-    "node": ">=18.0.0"
-  },
-  "scripts": {
-    "start": "node ./index.js",
-    "dev": "nodemon  ./index.js",
-    "deploy:ui": "rm -rf dist && cd ../fullstackopen-part_0_1_2/part2/phonebook && npm run build && cp -r dist ../../../fullstackopen-part_3/",
-    "publish:full": "npm run deploy:ui && git add . && git commit -m uibuild && git push origin main"
-  },
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2",
-    "mongoose": "^8.3.5",
-    "morgan": "^1.10.0",
-    "nodemon": "^3.1.0"
-  }
+   "name": "fullstackopen-part_3",
+   "version": "1.0.0",
+   "main": "index.js",
+   "engines": {
+      "node": ">=18.0.0"
+   },
+   "scripts": {
+      "start": "node ./index.js",
+      "dev": "nodemon  ./index.js",
+      "deploy:ui": "rm -rf dist && cd ../fullstackopen-part_0_1_2/part2/phonebook && npm run build && cp -r dist ../../../fullstackopen-part_3/",
+      "publish:full": "npm run deploy:ui && git add . && git commit -m uibuild && git push origin main",
+      "lint": "eslint ."
+   },
+   "author": "",
+   "license": "ISC",
+   "description": "",
+   "dependencies": {
+      "cors": "^2.8.5",
+      "dotenv": "^16.4.5",
+      "express": "^4.19.2",
+      "mongoose": "^8.3.5",
+      "morgan": "^1.10.0",
+      "nodemon": "^3.1.0"
+   },
+   "devDependencies": {
+      "@eslint/js": "^9.3.0",
+      "@stylistic/eslint-plugin-js": "^2.1.0",
+      "eslint": "^9.3.0",
+      "globals": "^15.2.0"
+   }
 }
