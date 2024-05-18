@@ -83,7 +83,7 @@ app.put("/api/persons/:id", async (req, res, next) => {
       const { name, number } = req.body;
       const person = { _id: id, name, number };
       const updatedPerson = await Person.findByIdAndUpdate(id, person, {
-         new: true,
+         new: true, runValidators: true, 
       });
       if (!updatedPerson)
          return res
@@ -114,13 +114,17 @@ app.use((req, res, next) => {
 });
 
 // Error middleware
-app.use((err, req, res) => {
+const errMiddleware = (err, req, res) => {
    console.log(err.message);
    if (err.name === "CastError") {
       return res.status(400).json({ error: "malformatted id" });
+   } else if (err.name === "ValidationError") {
+      return res.status(404).json({ error: err.message });
    }
-   res.send(err);
-});
+   res.json({ error: err.message });
+};
+
+app.use(errMiddleware);
 
 const Port = process.env.PORT || 3001;
 
