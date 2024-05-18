@@ -1,9 +1,10 @@
+/* global process*/
 const express = require("express");
 const morgan = require("morgan");
 const app = express();
 const cors = require("cors");
 const Person = require("./Person");
-const { default: mongoose } = require("mongoose");
+const { mongoose } = require("mongoose");
 
 require("dotenv").config();
 
@@ -66,7 +67,6 @@ app.post("/api/persons", async (req, res, next) => {
          res.status(201).json(newPerson);
       })
       .catch((err) => {
-         console.log("🚀 ~ app.post ~ err:", err);
          next(err);
       });
 });
@@ -97,8 +97,6 @@ app.put("/api/persons/:id", async (req, res, next) => {
             .send(`Person with id ${id} has already been deleted`);
       res.json(updatedPerson);
    } catch (err) {
-      console.log("🚀 ~ app.put ~ err.message:", err.message);
-      console.log("🚀 ~ app.put ~ err.name:", err.name);
       next(err);
    }
 });
@@ -117,14 +115,12 @@ app.delete("/api/persons/:id", async (req, res, next) => {
 });
 
 // Unknown endpoint error
-app.use((req, res, next) => {
+app.use((req, res) => {
    res.status(404).json({ err: "Unknown endpoint!" });
 });
 
 // Error middleware
 const errMiddleware = (err, req, res, next) => {
-   console.log("🚀 ~ errMiddleware ~ err.message:", err.message);
-   console.log("🚀 ~ errMiddleware ~ err.name:", err.name);
    if (err.name === "CastError") {
       return res.status(400).json({ error: "malformatted id" });
    } else if (err.name === "ValidationError") {
