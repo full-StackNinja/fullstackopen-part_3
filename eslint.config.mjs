@@ -5,5 +5,5 @@ export default [
    { files: ["**/*.js"], languageOptions: { sourceType: "commonjs" } },
    { languageOptions: { globals: globals.browser } },
    pluginJs.configs.recommended,
-   { ignores: ["dist/*"] },
+   { ignores: ["dist/"] },
 ];
