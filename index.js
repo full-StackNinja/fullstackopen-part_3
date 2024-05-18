@@ -60,10 +60,15 @@ app.post("/api/persons", async (req, res, next) => {
       name,
       number,
    });
-   await newPerson.save().catch((err) => {
-      next(err);
-   });
-   res.status(201).json(newPerson);
+   newPerson
+      .save()
+      .then(() => {
+         res.status(201).json(newPerson);
+      })
+      .catch((err) => {
+         console.log("🚀 ~ app.post ~ err:", err);
+         next(err);
+      });
 });
 
 app.get("/api/persons/:id", async (req, res) => {
@@ -92,6 +97,8 @@ app.put("/api/persons/:id", async (req, res, next) => {
             .send(`Person with id ${id} has already been deleted`);
       res.json(updatedPerson);
    } catch (err) {
+      console.log("🚀 ~ app.put ~ err.message:", err.message);
+      console.log("🚀 ~ app.put ~ err.name:", err.name);
       next(err);
    }
 });
@@ -115,14 +122,15 @@ app.use((req, res, next) => {
 });
 
 // Error middleware
-const errMiddleware = (err, req, res) => {
-   console.log(err.message);
+const errMiddleware = (err, req, res, next) => {
+   console.log("🚀 ~ errMiddleware ~ err.message:", err.message);
+   console.log("🚀 ~ errMiddleware ~ err.name:", err.name);
    if (err.name === "CastError") {
       return res.status(400).json({ error: "malformatted id" });
    } else if (err.name === "ValidationError") {
-      return res.status(404).json({ error: err.message });
+      return res.status(400).json({ error: err.message });
    }
-   res.json({ error: err.message });
+   next(err);
 };
 
 app.use(errMiddleware);
