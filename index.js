@@ -50,7 +50,7 @@ app.get("/api/persons", async (req, res) => {
    res.json(data);
 });
 
-app.post("/api/persons", async (req, res) => {
+app.post("/api/persons", async (req, res, next) => {
    const { name, number } = req.body;
    if (!name) return res.status(422).send("name is required");
    if (!number) return res.status(422).send("number is required");
@@ -61,7 +61,7 @@ app.post("/api/persons", async (req, res) => {
       number,
    });
    await newPerson.save().catch((err) => {
-      throw new Error(err.message);
+      next(err);
    });
    res.status(201).json(newPerson);
 });
@@ -83,7 +83,8 @@ app.put("/api/persons/:id", async (req, res, next) => {
       const { name, number } = req.body;
       const person = { _id: id, name, number };
       const updatedPerson = await Person.findByIdAndUpdate(id, person, {
-         new: true, runValidators: true, 
+         new: true,
+         runValidators: true,
       });
       if (!updatedPerson)
          return res
